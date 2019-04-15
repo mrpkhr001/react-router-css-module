@@ -2,6 +2,9 @@
 const path = require("path");
 
 const SOURCE = path.resolve(__dirname, "src");
+const UNKNOWN_CSS_SOURCE = path.resolve(__dirname, "temp");
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const BABEL_LOADER = {
     loader: "babel-loader",
@@ -28,8 +31,27 @@ module.exports = {
             {
                 test:/\.css/,
                 use: ["style-loader", "css-loader"],
-                include: [""]
+                include: [UNKNOWN_CSS_SOURCE]
+            },
+            {
+                test:/\.css/,
+                use:[
+                    MiniCssExtractPlugin.loader,
+                    {
+                      loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            importLoaders:1,
+                            localIdentName: "[name]__[local]___[hash:base64:5]"
+                        }
+                    }
+                 ]
             }
          ]
-    }
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'styles.css'
+        })
+    ]
 };
