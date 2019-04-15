@@ -5,6 +5,8 @@ const SOURCE = path.resolve(__dirname, "src");
 const UNKNOWN_CSS_SOURCE = path.resolve(__dirname, "temp");
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
+const data = require("./data.js");
 
 const BABEL_LOADER = {
     loader: "babel-loader",
@@ -20,6 +22,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "build"),
         filename: "bundle.js",
+        libraryTarget: 'umd'
     },
     module:{
         rules:[
@@ -50,8 +53,20 @@ module.exports = {
          ]
     },
     plugins: [
+        new StaticSiteGeneratorPlugin({
+            entry: 'main',
+            paths: data.routes,
+            globals: {
+                window: {}
+            },
+            locals: {
+                // Properties here are merged into `locals`
+                // passed to the exported render function
+                greet: 'Hello'
+            }
+        }),
         new MiniCssExtractPlugin({
             filename: 'styles.css'
-        })
+        }),
     ]
 };
