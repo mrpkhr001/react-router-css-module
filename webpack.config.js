@@ -2,6 +2,7 @@
 const path = require("path");
 
 const SOURCE = path.resolve(__dirname, "src");
+const BUILD =  path.resolve(__dirname, "build");
 const UNKNOWN_CSS_SOURCE = path.resolve(__dirname, "temp");
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -12,22 +13,27 @@ const BABEL_LOADER = {
     loader: "babel-loader",
     options: {
         babelrc: false,
-        presets:[["@babel/preset-env", {modules: false}]],
+        presets:[["@babel/preset-env", {modules: false}], "@babel/preset-react"],
     }
 }
 
 module.exports = {
     mode: "development",
-    entry : "./src",
+    context: SOURCE,
+    entry : "./index.js",
     output: {
-        path: path.resolve(__dirname, "build"),
+        path: BUILD,
         filename: "bundle.js",
         libraryTarget: 'umd'
+
+    },
+    resolve: {
+        extensions: [".js", ".jsx"]
     },
     module:{
         rules:[
             {
-                test: /\/.(js|jsx)$/,
+                test: /\.(js|jsx)$/,
                 include: [SOURCE],
                 use: BABEL_LOADER
             },
