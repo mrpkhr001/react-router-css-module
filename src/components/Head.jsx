@@ -5,6 +5,7 @@ export default class Head extends React.Component {
         return (
             <head>
                 <title>{this.props.title}</title>
+                <link rel="stylesheet" href="styles.css" />
             </head>
         )
     }
